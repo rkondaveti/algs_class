@@ -3,19 +3,23 @@ public class Percolation {
     private int N;
     private int[] grid;
     private WeightedQuickUnionUF UF;
+    private int virtualTopSitePosition;
+    private int virtualBottomSitePosition;
 
     public Percolation(int N) {
     //create an N-by-N grid with all sites blocked
         this.N = N;
         grid = new int[N*N];
         
-        //every cell plus virual top site and virtual bottom site
+        //every cell plus virtual top site and virtual bottom site
         UF = new WeightedQuickUnionUF(N*N+2);
+        virtualTopSitePosition = N*N;  
+        virtualBottomSitePosition = N*N+1;
         
-        //union each top & bottom row to respective virtual sites
+        //union each site in top & bottom rows to respective virtual sites
         for (int j = 1; j < N; j++) {
-            UF.union(coordinatesToPosition(1, j), N*N);
-            UF.union(coordinatesToPosition(N, j), N*N+1);
+            UF.union(coordinatesToPosition(1, j), virtualTopSitePosition);
+            UF.union(coordinatesToPosition(N, j), virtualBottomSitePosition);
         }
     }
     
@@ -26,10 +30,8 @@ public class Percolation {
     }
     
     private void checkInBounds(int i, int j) {
-        if (i <= 0 || i > N) 
-            throw new IndexOutOfBoundsException("row index i out of bounds");
-        if (j <= 0 || j > N) 
-            throw new IndexOutOfBoundsException("column index j out of bounds");
+        if (!exists(i, j)) 
+            throw new IndexOutOfBoundsException("grid index out of bounds");
     }    
     
     public boolean isOpen(int i, int j) {    
@@ -55,17 +57,25 @@ public class Percolation {
         
         //union with adjacent sites if they exist and are open
         //site above
-        if (exists(i-1, j) && isOpen(i-1, j)) { UF.union(coordinatesToPosition(i, j), coordinatesToPosition(i-1, j)); }
+        if (exists(i-1, j) && isOpen(i-1, j)) 
+            { UF.union(coordinatesToPosition(i, j), 
+                       coordinatesToPosition(i-1, j)); }
         //site below
-        if (exists(i+1, j) && isOpen(i+1, j)) { UF.union(coordinatesToPosition(i, j), coordinatesToPosition(i+1, j)); }
+        if (exists(i+1, j) && isOpen(i+1, j)) 
+            { UF.union(coordinatesToPosition(i, j), 
+                       coordinatesToPosition(i+1, j)); }
         //site to left
-        if (exists(i, j-1) && isOpen(i, j-1)) { UF.union(coordinatesToPosition(i, j), coordinatesToPosition(i, j-1)); }
+        if (exists(i, j-1) && isOpen(i, j-1)) 
+            { UF.union(coordinatesToPosition(i, j), 
+                       coordinatesToPosition(i, j-1)); }
         //site to right
-        if (exists(i, j+1) && isOpen(i, j+1)) { UF.union(coordinatesToPosition(i, j), coordinatesToPosition(i, j+1)); }
+        if (exists(i, j+1) && isOpen(i, j+1)) 
+            { UF.union(coordinatesToPosition(i, j), 
+                       coordinatesToPosition(i, j+1)); }
         
     }
     
-    public boolean exists(int i, int j){
+    private boolean exists(int i, int j){
         //is the cell value in grid bounds?
         if (i <= 0 || i > N) { return false; }
         if (j <= 0 || j > N) { return false; }
@@ -73,8 +83,10 @@ public class Percolation {
     }
     
     public boolean percolates() {
-    //does the system percolate? Are the virtual site's connected?
-        if (UF.connected(N*N, N*N+1)) { return true; }        
+    //does the system percolate? Are the virtual sites connected?
+        if (UF.connected(virtualTopSitePosition, virtualBottomSitePosition)) { 
+            return true; 
+        }        
         return false;
     }
     
@@ -92,9 +104,5 @@ public class Percolation {
        
         System.out.println(perc.grid.length);
         System.out.println(perc.percolates());
-        
-    
-    }
-    
-    
+    }   
 }
