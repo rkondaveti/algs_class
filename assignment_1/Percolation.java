@@ -2,7 +2,7 @@ public class Percolation {
 
     private int N;
     private int[] grid;
-    WeightedQuickUnionUF UF;
+    private WeightedQuickUnionUF UF;
 
     public Percolation(int N) {
     //create an N-by-N grid with all sites blocked
@@ -10,14 +10,17 @@ public class Percolation {
         grid = new int[N*N];
         
         //every cell plus virual top site and virtual bottom site
-        UF = new WeightedQuickUnionUF((N*N)+2);
+        UF = new WeightedQuickUnionUF(N*N+2);
         
-        //union each top row to virtual top site
-        
+        //union each top & bottom row to respective virtual sites
+        for (int j = 1; j < N; j++) {
+            UF.union(coordinatesToPosition(1, j), N);
+            UF.union(coordinatesToPosition(N, j), N+1);
+        }
     }
     
-    private int coordinatesToPosition(int i, int j){
-    //returns the Array positon for grid coordinates orignating 1,1 upper left
+    private int coordinatesToPosition(int i, int j) {
+    //returns the Array positon from grid coordinates orignating 1,1 upper left
         checkInBounds(i, j);
         return N*i-(N-j+1);
     }
@@ -55,7 +58,6 @@ public class Percolation {
     public boolean percolates() {
     //does the system percolate?
         
-        //WeightedQuickUnionUF UF = new WeightedQuickUnionUF((N*N)+2);
         System.out.println(UF.count());
         
         return true;
@@ -73,7 +75,9 @@ public class Percolation {
         System.out.println(perc.coordinatesToPosition(50, 50));
         System.out.println(perc.coordinatesToPosition(1, 1));
         System.out.println(perc.coordinatesToPosition(2, 1));
+        System.out.println(perc.grid.length);
         perc.percolates();
+        
     
     }
     
