@@ -14,8 +14,8 @@ public class Percolation {
         
         //union each top & bottom row to respective virtual sites
         for (int j = 1; j < N; j++) {
-            UF.union(coordinatesToPosition(1, j), N);
-            UF.union(coordinatesToPosition(N, j), N+1);
+            UF.union(coordinatesToPosition(1, j), N*N);
+            UF.union(coordinatesToPosition(N, j), N*N+1);
         }
     }
     
@@ -53,30 +53,45 @@ public class Percolation {
         checkInBounds(i, j);
         this.grid[coordinatesToPosition(i, j)] = 1;
         
+        //union with adjacent sites if they exist and are open
+        //site above
+        if (exists(i-1, j) && isOpen(i-1, j)) { UF.union(coordinatesToPosition(i, j), coordinatesToPosition(i-1, j)); }
+        //site below
+        if (exists(i+1, j) && isOpen(i+1, j)) { UF.union(coordinatesToPosition(i, j), coordinatesToPosition(i+1, j)); }
+        //site to left
+        if (exists(i, j-1) && isOpen(i, j-1)) { UF.union(coordinatesToPosition(i, j), coordinatesToPosition(i, j-1)); }
+        //site to right
+        if (exists(i, j+1) && isOpen(i, j+1)) { UF.union(coordinatesToPosition(i, j), coordinatesToPosition(i, j+1)); }
+        
+    }
+    
+    public boolean exists(int i, int j){
+        //is the cell value in grid bounds?
+        if (i <= 0 || i > N) { return false; }
+        if (j <= 0 || j > N) { return false; }
+        return true;
     }
     
     public boolean percolates() {
-    //does the system percolate?
-        
-        System.out.println(UF.count());
-        
-        return true;
+    //does the system percolate? Are the virtual site's connected?
+        if (UF.connected(N*N, N*N+1)) { return true; }        
+        return false;
     }
     
     public static void main(String[] args) {
     //test client
      
-        Percolation perc = new Percolation(100);
-        System.out.println(perc.isFull(50, 50));
-        System.out.println(perc.isOpen(50, 50));
-        perc.open(50, 50);
-        System.out.println(perc.isFull(50, 50));
-        System.out.println(perc.isOpen(50, 50));
-        System.out.println(perc.coordinatesToPosition(50, 50));
-        System.out.println(perc.coordinatesToPosition(1, 1));
-        System.out.println(perc.coordinatesToPosition(2, 1));
+        Percolation perc = new Percolation(4);
+        System.out.println(perc.isFull(2, 2));
+        perc.open(2, 2);
+        System.out.println(perc.isFull(2, 2));
+
+        perc.open(1, 2);
+        perc.open(3, 2);
+        perc.open(4, 2);
+       
         System.out.println(perc.grid.length);
-        perc.percolates();
+        System.out.println(perc.percolates());
         
     
     }
