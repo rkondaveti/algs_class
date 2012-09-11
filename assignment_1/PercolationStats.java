@@ -1,19 +1,16 @@
-/* https://class.coursera.org/algs4partI-2012-001/forum/thread?thread_id=181 
+/* Soulution to http://coursera.cs.princeton.edu/algs4/assignments/percolation.html 
  * 
  */
 
 public class PercolationStats {
     
-    private int[] simulationResults;
+    public double[] simulationResults;
     
-    public PercolationsStats(int N, int T){
+    public PercolationStats(int N, int T) {
     //perform T independent computational experiments on an N-by-N grid
         
-        for (T; i < 0; T--) {
-            Percolation perc = new Percolation(N); 
-            simulationResults[T] = 
-                
-        }
+        simulationResults = new double[T];
+        
     }    
     
 /*
@@ -33,10 +30,14 @@ public class PercolationStats {
     public static void main(String[] args){
     //test client    
         
-        PercolationStats PercSimulation = new PercolationStats(200, 100)
+        PercolationStats PercSimulation = new PercolationStats(200, 100);
+        
+        for (int i = 0; i < PercSimulation.simulationResults.length; i++) {
+            System.out.println(PercSimulation.simulationResults[i]);
+        }   
     
     
-    
+    }
     
     
     
