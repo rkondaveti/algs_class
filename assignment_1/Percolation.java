@@ -94,6 +94,7 @@ public class Percolation {
     //test client
      
         Percolation perc = new Percolation(4);
+        System.out.println("percolates? " + perc.percolates());
         System.out.println(perc.isFull(2, 2));
         perc.open(2, 2);
         System.out.println(perc.isFull(2, 2));
@@ -103,6 +104,6 @@ public class Percolation {
         perc.open(4, 2);
        
         System.out.println(perc.grid.length);
-        System.out.println(perc.percolates());
+        System.out.println("percolates? " + perc.percolates());
     }   
 }
