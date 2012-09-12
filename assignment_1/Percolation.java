@@ -75,7 +75,7 @@ public class Percolation {
         
     }
     
-    private boolean exists(int i, int j){
+    private boolean exists(int i, int j) {
         //is the cell value in grid bounds?
         if (i <= 0 || i > N) { return false; }
         if (j <= 0 || j > N) { return false; }

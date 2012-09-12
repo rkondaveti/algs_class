@@ -1,13 +1,13 @@
-/* Soulution to http://coursera.cs.princeton.edu/algs4/assignments/percolation.html  
+/* Soulution to 
+ * http://coursera.cs.princeton.edu/algs4/assignments/percolation.html  
  * Perform T independent computational experiments on an N-by-N grid
  */
 
 public class PercolationStats {
     
-    int N; //size of grid
-    int T; //number of simulations to run
-    
-    public double[] simulationResults;
+    private int N; //size of grid
+    private int T; //number of simulations to run
+    private double[] simulationResults; //threshold estimates
     
     public PercolationStats(int N, int T) {
         this.N = N;
@@ -25,16 +25,17 @@ public class PercolationStats {
         
         double counter = 0;
         
-        while(!percolation.percolates()) {
+        while (!percolation.percolates()) {
         
             counter++;
             
-            //pick a random site (N+1 because second value to uniform is exclusive)
+            //pick a random site 
+            //(N+1 because second value to uniform is exclusive)
             int i = StdRandom.uniform(1, N+1);
             int j = StdRandom.uniform(1, N+1);
             
             //generate new random sites until a blocked one is found
-            while(percolation.isOpen(i, j)){
+            while (percolation.isOpen(i, j)) {
                 
                 i = StdRandom.uniform(1, N+1);
                 j = StdRandom.uniform(1, N+1);
@@ -45,7 +46,7 @@ public class PercolationStats {
             percolation.open(i, j);
         
         }
-        return counter / (N*N); //return percolation threshold estimate
+        return counter / (N*N); //percolation threshold estimate
     }
     
 
@@ -59,7 +60,7 @@ public class PercolationStats {
         return StdStats.stddev(simulationResults);
     }
     
-    public static void main(String[] args){
+    public static void main(String[] args) {
     //test client
         
         int gridSize;
@@ -74,19 +75,27 @@ public class PercolationStats {
         }
         
         if (gridSize <= 0 || simulationCount <= 0) {
-            throw new java.lang.IllegalArgumentException("Arguments must be greater than 0");
+            throw new java.lang.IllegalArgumentException(
+                      "Arguments must be greater than 0");
         }
             
         
-        PercolationStats PercSim = new PercolationStats(gridSize, simulationCount);
+        PercolationStats percSim = 
+            new PercolationStats(gridSize, simulationCount);
         
-        double confidenceLeft  = PercSim.mean() - 1.96 * PercSim.stddev() / Math.sqrt(PercSim.T);
-        double confidenceRight = PercSim.mean() + 1.96 * PercSim.stddev() / Math.sqrt(PercSim.T);
+        double confidenceLeft  = percSim.mean() - 1.96 
+            * percSim.stddev() / Math.sqrt(percSim.T);
+        
+        double confidenceRight = percSim.mean() + 1.96 
+            * percSim.stddev() / Math.sqrt(percSim.T);
         
         
-        System.out.println("mean                    = " + PercSim.mean()); 
-        System.out.println("stddev                  = " + PercSim.stddev());
-        System.out.println("95% confidence interval = " + confidenceLeft + ", " + confidenceRight);
+        System.out.println("mean                    = " 
+                           + percSim.mean()); 
+        System.out.println("stddev                  = " 
+                           + percSim.stddev());
+        System.out.println("95% confidence interval = " 
+                           + confidenceLeft + ", " + confidenceRight);
                             
     
     }
