@@ -60,13 +60,34 @@ public class PercolationStats {
     }
     
     public static void main(String[] args){
-    //test client    
+    //test client
         
-        PercolationStats PercSimulation = new PercolationStats(1000, 10);
+        int gridSize;
+        int simulationCount;
+  
+        if (args.length == 0) {
+            gridSize = 100;
+            simulationCount = 10;
+        } else {
+            gridSize = Integer.parseInt(args[0]);
+            simulationCount = Integer.parseInt(args[1]);
+        }
         
-        for (int i = 0; i < PercSimulation.simulationResults.length; i++) {
-            System.out.println(PercSimulation.simulationResults[i]);
-        }   
+        if (gridSize <= 0 || simulationCount <= 0) {
+            throw new java.lang.IllegalArgumentException("Arguments must be greater than 0");
+        }
+            
+        
+        PercolationStats PercSim = new PercolationStats(gridSize, simulationCount);
+        
+        double confidenceLeft  = PercSim.mean() - 1.96 * PercSim.stddev() / Math.sqrt(PercSim.T);
+        double confidenceRight = PercSim.mean() + 1.96 * PercSim.stddev() / Math.sqrt(PercSim.T);
+        
+        
+        System.out.println("mean                    = " + PercSim.mean()); 
+        System.out.println("stddev                  = " + PercSim.stddev());
+        System.out.println("95% confidence interval = " + confidenceLeft + ", " + confidenceRight);
+                            
     
     }
 }
